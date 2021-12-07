@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31424.327
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toyo.Blockchain.Domain", "Toyo.Blockchain.Domain\Toyo.Blockchain.Domain.csproj", "{729B28AD-FD9D-4AF3-8A47-95C35E32F8E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Toyo.Blockchain.Api", "Toyo.Blockchain.Api\Toyo.Blockchain.Api.csproj", "{2D1A4773-8588-4970-873B-6D4DBF4E0ADA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BE385458-9D28-4F7F-8919-BFAC3D11FC9C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{729B28AD-FD9D-4AF3-8A47-95C35E32F8E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{729B28AD-FD9D-4AF3-8A47-95C35E32F8E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{729B28AD-FD9D-4AF3-8A47-95C35E32F8E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{729B28AD-FD9D-4AF3-8A47-95C35E32F8E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D1A4773-8588-4970-873B-6D4DBF4E0ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D1A4773-8588-4970-873B-6D4DBF4E0ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D1A4773-8588-4970-873B-6D4DBF4E0ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D1A4773-8588-4970-873B-6D4DBF4E0ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {937261FB-7125-49FB-A3E8-C62A8EAAC7D7}
+	EndGlobalSection
+EndGlobal
