@@ -5,7 +5,6 @@
     <RootNamespace>Toyo.Blockchain.Api</RootNamespace>
     <UserSecretsId>1a393616-4587-4545-9c9b-396f04ac1b47</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <CodeAnalysisRuleSet>..\.sonarlint\toyo.blockchain.apicsharp.ruleset</CodeAnalysisRuleSet>
     <SonarQubeTestProject>False</SonarQubeTestProject>
   </PropertyGroup>
 
@@ -15,10 +14,6 @@
 
   <ItemGroup>
     <Content Remove="appsettings.Development.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="..\.sonarlint\toyo.blockchain.api\CSharp\SonarLint.xml" Link="SonarLint.xml" />
   </ItemGroup>
 
   <ItemGroup>
