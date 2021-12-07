@@ -54,7 +54,7 @@
         "NFTTOKENSWAP_CREATIONBLOCK": "22150877",
         "NFTTOKENSTORAGE_ADDRESS": "0x964eF621b70d0c0934cDA2B6894F24dF6E96982B",
 
-        "TOYO_BACKEND_API": "https://143.198.9.44/api/"
+        "TOYO_BACKEND_API": "http://143.198.9.44/api/"
       },
       "publishAllPorts": true,
       "useSSL": true

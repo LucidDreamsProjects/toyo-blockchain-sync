@@ -37,9 +37,9 @@ WEB3_CHAINID: 137
 
 ## 2) Docker file
 
-docker build -f "Toyo.Blockchain.Api\Dockerfile" --force-rm -t toyoblockchainapi:dev --target base .
+docker build -f "Toyo.Blockchain.Api\Dockerfile" --force-rm -t toyoblockchainapi:dev .
 
-docker run -d -p 49155:80 --name toyosync toyoblockchainapi:dev
+docker run -d -p 4444:80 --env-file "Toyo.Blockchain.Api\.env" --name toyosync toyoblockchainapi:dev
 
 ## 3) Sync methods
 
