@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Toyo.Blockchain.Api.Helpers
@@ -21,11 +22,11 @@ namespace Toyo.Blockchain.Api.Helpers
             Reentrancy = Status.NotEntered;
         }
 
-        public bool IsReentrant(string EVENT_NAME)
+        public bool IsReentrant(string eventName, StringBuilder log)
         {
             if (Reentrancy == Status.Entered)
             {
-                Console.WriteLine($"[{EVENT_NAME}] Sync in execution, wait for actual execution to finish");
+                Console.WriteLine($"[{eventName}] Sync in execution, wait for actual execution to finish");
                 return true;
             }
 

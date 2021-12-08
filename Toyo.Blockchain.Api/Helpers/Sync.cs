@@ -36,16 +36,19 @@ namespace Toyo.Blockchain.Api.Helpers
             _httpClient = httpClient;
         }
 
-        public void SyncEvent(ulong? fromBlockNumber,
+        public string SyncEvent(ulong? fromBlockNumber,
                                   ulong? toBlockNumber,
                                   string eventName,
                                   string contractAddress,
                                   ulong creationBlock,
+                                  bool verbose,
                                   ulong fetchByBlocks = 1000)
         {
-            Console.WriteLine($"[{eventName}] Started");
+            var log = new StringBuilder();
 
-            if (IsReentrant(eventName)) return;
+            Diagnostics.WriteLog(log, $"[{eventName}] Started");
+
+            if (IsReentrant(eventName, log)) return log.ToString();
 
             ulong? fromIncrementBlock = null;
 
@@ -88,7 +91,7 @@ namespace Toyo.Blockchain.Api.Helpers
                             toIncrementBlock = toBlockNumber.Value;
                         }
 
-                        Console.WriteLine($"[{eventName}] Reading from block {fromIncrementBlock} to {toIncrementBlock}");
+                        Diagnostics.WriteLog(log, $"[{eventName}] Reading from block {fromIncrementBlock} to {toIncrementBlock}");
 
                         var filter = eventHandler.CreateFilterInput(
                             new BlockParameter(fromIncrementBlock.Value), new BlockParameter(toIncrementBlock));
@@ -97,7 +100,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
                         foreach (var change in allChanges)
                         {
-                            SyncEvent(eventName, change);
+                            SyncEvent(log, eventName, change);
                         }
 
                         SetLastBlockSynced(eventName, toIncrementBlock, chainId, eventHandler.ContractAddress);
@@ -111,35 +114,37 @@ namespace Toyo.Blockchain.Api.Helpers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[{eventName}] LastBlock {fromIncrementBlock.Value} | Exception {ex.Message} | InnerException {ex.InnerException?.Message}");
+                Diagnostics.WriteLog(log, $"[{eventName}] LastBlock {fromIncrementBlock.Value} | Exception {ex.Message} | InnerException {ex.InnerException?.Message}");
             }
             finally
             {
                 ResetNonReentrancy();
                 methodStopWatch.Stop();
-                Diagnostics.WriteElapsedTime($"[{eventName}] Method elapsed time", methodStopWatch.Elapsed);
+                Diagnostics.WriteElapsedTimeLog(log, $"[{eventName}] Method elapsed time", methodStopWatch.Elapsed);
             }
+
+            return verbose ? log.ToString() : string.Empty;
         }
 
-        private void SyncEvent(string eventName, EventLog<TEventMessage> change)
+        private void SyncEvent(StringBuilder log, string eventName, EventLog<TEventMessage> change)
         {
             var eventMessage = typeof(TEventMessage);
 
             if (eventMessage == _tokenTransferEventType)
             {
-                SyncTransfersAdd(eventName, change as EventLog<TransferEventDto>);
+                SyncTransfersAdd(log, eventName, change as EventLog<TransferEventDto>);
             }
             else if (eventMessage == _tokenPurchasedEventType)
             {
-                SyncMintsAdd(eventName, change as EventLog<TokenPurchasedEventDto>);
+                SyncMintsAdd(log, eventName, change as EventLog<TokenPurchasedEventDto>);
             }
             else if (eventMessage == _tokenTypeEventType)
             {
-                SyncTypesAdd(eventName, change as EventLog<TokenTypeAddedEventDto>);
+                SyncTypesAdd(log, eventName, change as EventLog<TokenTypeAddedEventDto>);
             }
             else if (eventMessage == _tokenSwapEventType)
             {
-                SyncSwapsAdd(eventName, change as EventLog<TokenSwappedEventDto>);
+                SyncSwapsAdd(log, eventName, change as EventLog<TokenSwappedEventDto>);
             }
         }
 
@@ -219,15 +224,15 @@ namespace Toyo.Blockchain.Api.Helpers
             }
         }
 
-        private void SyncTransfersAdd(string eventName, EventLog<TransferEventDto> log)
+        private void SyncTransfersAdd(StringBuilder log, string eventName, EventLog<TransferEventDto> eventLog)
         {
             var item = new ToyoTransfer()
             {
-                transactionHash = log.Log.TransactionHash,
+                transactionHash = eventLog.Log.TransactionHash,
                 chainId = _chainId.ToString(),
-                tokenId = ((ulong)log.Event.TokenId),
-                walletAddress = log.Event.To,
-                blockNumber = ulong.Parse(log.Log.BlockNumber.ToString())
+                tokenId = ((ulong)eventLog.Event.TokenId),
+                walletAddress = eventLog.Event.To,
+                blockNumber = ulong.Parse(eventLog.Log.BlockNumber.ToString())
             };
 
             const string requestUri = "SmartContractToyoTransfer";
@@ -235,23 +240,23 @@ namespace Toyo.Blockchain.Api.Helpers
 
             Post(requestUri, json);
 
-            Console.WriteLine($"[{eventName}] Add {log.Event.TokenId} | Hash {log.Log.TransactionHash}");
+            Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TokenId} | Hash {eventLog.Log.TransactionHash}");
         }
 
-        private void SyncMintsAdd(string eventName, EventLog<TokenPurchasedEventDto> log)
+        private void SyncMintsAdd(StringBuilder log, string eventName, EventLog<TokenPurchasedEventDto> eventLog)
         {
-            var gwei = Web3.Convert.FromWei(log.Event.Value, UnitConversion.EthUnit.Gwei);
+            var gwei = Web3.Convert.FromWei(eventLog.Event.Value, UnitConversion.EthUnit.Gwei);
 
             var item = new ToyoMint()
             {
-                transactionHash = log.Log.TransactionHash,
-                tokenId = ((ulong)log.Event.TokenId),
-                sender = log.Event.Spender,
-                walletAddress = log.Event.Beneficiary,
-                typeId = ((ulong)log.Event.TypeId),
-                totalSypply = ((ulong)log.Event.TotalSupply),
+                transactionHash = eventLog.Log.TransactionHash,
+                tokenId = ((ulong)eventLog.Event.TokenId),
+                sender = eventLog.Event.Spender,
+                walletAddress = eventLog.Event.Beneficiary,
+                typeId = ((ulong)eventLog.Event.TypeId),
+                totalSypply = ((ulong)eventLog.Event.TotalSupply),
                 gwei = ((ulong)gwei),
-                blockNumber = ulong.Parse(log.Log.BlockNumber.ToString()),
+                blockNumber = ulong.Parse(eventLog.Log.BlockNumber.ToString()),
                 chainId = _chainId.ToString()
             };
 
@@ -260,13 +265,13 @@ namespace Toyo.Blockchain.Api.Helpers
 
             Post(requestUri, json);
 
-            Console.WriteLine($"[{eventName}] Add {log.Event.TokenId}");
+            Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TokenId}");
         }
 
-        private void SyncTypesAdd(string eventName, EventLog<TokenTypeAddedEventDto> log)
+        private void SyncTypesAdd(StringBuilder log, string eventName, EventLog<TokenTypeAddedEventDto> eventLog)
         {
-            var typeId = ((int)log.Event.TypeId);
-            var blockNumber = ulong.Parse(log.Log.BlockNumber.ToString());
+            var typeId = ((int)eventLog.Event.TypeId);
+            var blockNumber = ulong.Parse(eventLog.Log.BlockNumber.ToString());
             var contractAddress = Environment.GetEnvironmentVariable("NFTTOKENSTORAGE_ADDRESS");
             var response = TokenStorage.GetMetadata(_web3, blockNumber, typeId, contractAddress).Result;
             var metadata = response.Metadata;
@@ -274,7 +279,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
             var item = new ToyoType()
             {
-                transactionHash = log.Log.TransactionHash,
+                transactionHash = eventLog.Log.TransactionHash,
                 typeId = typeId,
                 chainId = _chainId.ToString(),
                 blockNumber = blockNumber,
@@ -288,19 +293,19 @@ namespace Toyo.Blockchain.Api.Helpers
 
             Post(requestUri, json);
 
-            Console.WriteLine($"[{eventName}] Add {log.Event.TypeId} | Name {typeName} | Metadata {metadata}");
+            Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TypeId} | Name {typeName} | Metadata {metadata}");
         }
 
-        private void SyncSwapsAdd(string eventName, EventLog<TokenSwappedEventDto> log)
+        private void SyncSwapsAdd(StringBuilder log, string eventName, EventLog<TokenSwappedEventDto> eventLog)
         {
             var item = new ToyoSwap()
             {
-                transactionHash = log.Log.TransactionHash,
-                fromTypeId = ((int)log.Event.FromTypeId),
-                toTypeId = ((int)log.Event.ToTypeId),
-                tokenId = ulong.Parse(log.Event.TokenId.ToString()),
-                blockNumber = ulong.Parse(log.Log.BlockNumber.ToString()),
-                sender = log.Event.Sender,
+                transactionHash = eventLog.Log.TransactionHash,
+                fromTypeId = ((int)eventLog.Event.FromTypeId),
+                toTypeId = ((int)eventLog.Event.ToTypeId),
+                tokenId = ulong.Parse(eventLog.Event.TokenId.ToString()),
+                blockNumber = ulong.Parse(eventLog.Log.BlockNumber.ToString()),
+                sender = eventLog.Event.Sender,
                 chainId = _chainId.ToString()
             };
 
@@ -309,7 +314,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
             Post(requestUri, json);
 
-            Console.WriteLine($"[{eventName}] Add {log.Event.TokenId}");
+            Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TokenId}");
         }
     }
 }

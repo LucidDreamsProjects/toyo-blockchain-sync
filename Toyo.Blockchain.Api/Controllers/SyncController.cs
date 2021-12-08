@@ -60,96 +60,108 @@ namespace Toyo.Blockchain.Api.Controllers
 
         [HttpGet]
         [Route("SyncTransfers")]
-        public void SyncTransfers(ulong? fromBlockNumber, ulong? toBlockNumber, ulong fetchByBlocks = 1000)
+        public string SyncTransfers(
+            ulong? fromBlockNumber, 
+            ulong? toBlockNumber,
+            bool verbose = false,
+            ulong fetchByBlocks = 1000)
         {
             const string eventName = "Transfer";
 
             var sync = new Sync<TransferEventDto>(_web3, _chainId, _httpClient);
 
-            sync.SyncEvent(
-                fromBlockNumber,
-                toBlockNumber,
-                eventName,
-                _tokenContractAddress,
-                _tokenContractCreationBlock,
-                fetchByBlocks);
+            return sync.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _tokenContractAddress,
+                        _tokenContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
         }
 
         [HttpGet]
         [Route("SyncMints")]
-        public void SyncMints(ulong? fromBlockNumber,
+        public string SyncMints(ulong? fromBlockNumber,
                               ulong? toBlockNumber,
+                              bool verbose = false,
                               ulong fetchByBlocks = 1000)
         {
             const string eventName = "TokenPurchased";
 
             var sync = new Sync<TokenPurchasedEventDto>(_web3, _chainId, _httpClient);
 
-            sync.SyncEvent(
-                fromBlockNumber,
-                toBlockNumber,
-                eventName,
-                _crowdsaleContractAddress,
-                _crowdsaleContractCreationBlock,
-                fetchByBlocks);
-
+            return sync.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _crowdsaleContractAddress,
+                        _crowdsaleContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
         }
 
         [HttpGet]
         [Route("SyncSwapMints")]
-        public void SyncSwapMints(ulong? fromBlockNumber,
+        public string SyncSwapMints(ulong? fromBlockNumber,
                               ulong? toBlockNumber,
+                              bool verbose = false,
                               ulong fetchByBlocks = 1000)
         {
             const string eventName = "TokenPurchased";
 
             var sync = new Sync<TokenPurchasedEventDto>(_web3, _chainId, _httpClient);
 
-            sync.SyncEvent(
-                fromBlockNumber,
-                toBlockNumber,
-                eventName,
-                _swapContractAddress,
-                _swapContractCreationBlock,
-                fetchByBlocks);
+            return sync.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _swapContractAddress,
+                        _swapContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
         }
 
         [HttpGet]
         [Route("SyncTypes")]
-        public void SyncTypes(ulong? fromBlockNumber,
+        public string SyncTypes(ulong? fromBlockNumber,
                               ulong? toBlockNumber,
+                              bool verbose = false,
                               ulong fetchByBlocks = 1000)
         {
             const string eventName = "TokenTypeAdded";
 
             var sync = new Sync<TokenTypeAddedEventDto>(_web3, _chainId, _httpClient);
 
-            sync.SyncEvent(
-                fromBlockNumber,
-                toBlockNumber,
-                eventName,
-                _crowdsaleContractAddress,
-                _crowdsaleContractCreationBlock,
-                fetchByBlocks);
+            return sync.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _crowdsaleContractAddress,
+                        _crowdsaleContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
         }
 
         [HttpGet]
         [Route("SyncSwaps")]
-        public void SyncSwaps(ulong? fromBlockNumber,
+        public string SyncSwaps(ulong? fromBlockNumber,
                               ulong? toBlockNumber,
+                              bool verbose = false,
                               ulong fetchByBlocks = 1000)
         {
             const string eventName = "TokenSwapped";
 
             var sync = new Sync<TokenSwappedEventDto>(_web3, _chainId, _httpClient);
 
-            sync.SyncEvent(
-                fromBlockNumber,
-                toBlockNumber,
-                eventName,
-                _swapContractAddress,
-                _swapContractCreationBlock,
-                fetchByBlocks);
+            return sync.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _swapContractAddress,
+                        _swapContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
         }
     }
 }
