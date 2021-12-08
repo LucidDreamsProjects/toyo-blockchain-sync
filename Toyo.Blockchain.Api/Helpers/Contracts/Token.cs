@@ -74,18 +74,30 @@ namespace Toyo.Blockchain.Api.Helpers.Contracts
 
         public static string GetTokenTypeName(string uri)
         {
+            const string jsonPath = "$.name";
+            return GetJsonValue(uri, jsonPath);
+        }
+
+        public static string GetTokenTypeImage(string uri)
+        {
+            const string jsonPath = "$.image";
+            return GetJsonValue(uri, jsonPath);
+        }
+
+        private static string GetJsonValue(string uri, string jsonPath)
+        {
             using WebClient client = new();
 
-            var name = string.Empty;
+            var value = string.Empty;
             var jsonContent = GetJson(client, uri);
 
             if (!string.IsNullOrEmpty(jsonContent))
             {
-                var jsonObject = JObject.Parse(jsonContent).SelectTokens("$.name").First();
+                var jsonObject = JObject.Parse(jsonContent).SelectTokens(jsonPath).First();
                 return jsonObject.Value<string>();
             }
 
-            return name;
+            return value;
         }
 
         public static string GetJson(WebClient client, string uri)

@@ -13,17 +13,21 @@ If you are running locally, go to Properties/launchSettings.json and set each of
 Variables for Mainet network
 
 #### NFT TOKEN CROWDSALE CONTRACT
+
 NFTTOKENCROWDSALE_ADDRESS: 0x0fb872ba6a28d5195bbaac2d4649713a7bc5c450
 NFTTOKENCROWDSALE_CREATIONBLOCK: 20223539
 
 #### NFT TOKEN CONTRACT
+
 NFTTOKEN_ADDRESS: 0x07AE3987C679c0aFd2eC1ED2945278c37918816c
 NFTTOKEN_CREATIONBLOCK: 20223288
 
 #### NFT TOKEN STORAGE
+
 NFTTOKENSTORAGE_ADDRESS: 0x964eF621b70d0c0934cDA2B6894F24dF6E96982B
 
 #### NFT TOKEN SWAP
+
 NFTTOKENSWAP_ADDRESS: Not deployed,
 NFTTOKENSWAP_CREATIONBLOCK: No deployed,
 
@@ -59,3 +63,13 @@ It listens to the event name: TokenPurchased
 
 This method is used to sync all types added in the smart contract since the last block read to the latest block minted.
 It listens to the event name: TokenTypeAdded
+
+### SyncSwaps
+
+This method is used to sync all swaps in the smart contract since the last block read to the latest block minted.
+It listens to the event name: TokenSwapped
+
+### SyncSwapMints
+
+This method is used to sync all tokens minted during swap in the smart contract since the last block read to the latest block minted.
+It listens to the event name: TokenPurchased

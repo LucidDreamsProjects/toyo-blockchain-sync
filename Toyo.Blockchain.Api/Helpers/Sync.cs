@@ -240,7 +240,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
         private void SyncMintsAdd(string eventName, EventLog<TokenPurchasedEventDto> log)
         {
-            var gwei = Web3.Convert.FromWei(log.Event.Value, UnitConversion.EthUnit.Ether);
+            var gwei = Web3.Convert.FromWei(log.Event.Value, UnitConversion.EthUnit.Gwei);
 
             var item = new ToyoMint()
             {
