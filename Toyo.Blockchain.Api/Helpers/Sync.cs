@@ -48,7 +48,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
             Diagnostics.WriteLog(log, $"[{eventName}] Started");
 
-            if (IsReentrant(eventName, log)) return log.ToString();
+            if (IsReentrant(log, eventName)) return log.ToString();
 
             ulong? fromIncrementBlock = null;
 

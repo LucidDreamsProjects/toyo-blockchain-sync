@@ -48,28 +48,39 @@ docker run -d -p 4444:80 --env-file "Toyo.Blockchain.Api\.env" --name toyosync t
 ## 3) Sync methods
 
 You can schedule each method to run periodically.
+Each sync method accepts "verbose" parameter as optional, it outputs the log to the response stream and to the host console. The default value is false.
 
 ### SyncTransfers
 
 This method is used to sync all transfers made in the smart contract since the last block read to the latest block minted.
 It listens to the event name: Transfer
 
+curl -X GET "http://localhost:4444/Sync/SyncTypes?verbose=true"
+
 ### SyncMints
 
 This method is used to sync all tokens minted in the smart contract since the last block read to the latest block minted.
 It listens to the event name: TokenPurchased
+
+curl -X GET "http://localhost:4444/Sync/SyncMints?verbose=true"
 
 ### SyncTypes
 
 This method is used to sync all types added in the smart contract since the last block read to the latest block minted.
 It listens to the event name: TokenTypeAdded
 
+curl -X GET "http://localhost:4444/Sync/SyncTypes?verbose=true"
+
 ### SyncSwaps
 
 This method is used to sync all swaps in the smart contract since the last block read to the latest block minted.
 It listens to the event name: TokenSwapped
 
+curl -X GET "http://localhost:4444/Sync/SyncSwaps?verbose=true"
+
 ### SyncSwapMints
 
 This method is used to sync all tokens minted during swap in the smart contract since the last block read to the latest block minted.
 It listens to the event name: TokenPurchased
+
+curl -X GET "http://localhost:4444/Sync/SyncSwapMints?verbose=true"

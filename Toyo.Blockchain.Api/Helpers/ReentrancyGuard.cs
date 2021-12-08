@@ -22,11 +22,11 @@ namespace Toyo.Blockchain.Api.Helpers
             Reentrancy = Status.NotEntered;
         }
 
-        public bool IsReentrant(string eventName, StringBuilder log)
+        public bool IsReentrant(StringBuilder log, string eventName)
         {
             if (Reentrancy == Status.Entered)
             {
-                Console.WriteLine($"[{eventName}] Sync in execution, wait for actual execution to finish");
+                Diagnostics.WriteLog(log, $"[{eventName}] Sync in execution, wait for actual execution to finish");
                 return true;
             }
 
