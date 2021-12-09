@@ -21,8 +21,6 @@ namespace Toyo.Blockchain.Api.Controllers
     [Route("[controller]")]
     public class SyncController : ControllerBase
     {
-        private readonly Web3 _web3;
-
         private readonly int _chainId;
 
         private readonly string _tokenContractAddress;
@@ -36,41 +34,43 @@ namespace Toyo.Blockchain.Api.Controllers
 
         private readonly HttpClient _httpClient;
 
-        public SyncController(IHttpClientFactory httpClientFactory)
+        private ISync _sync;
+
+        public SyncController(IHttpClientFactory httpClientFactory, ISync sync)
         {
-            string _url = Environment.GetEnvironmentVariable("WEB3_RPC");
-            _chainId = int.Parse(Environment.GetEnvironmentVariable("WEB3_CHAINID"));
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Trim().ToUpper();
 
-            _web3 = new Web3(_url);
-            _web3.TransactionManager.UseLegacyAsDefault = true;
+            _sync = sync;
 
-            _tokenContractAddress = Environment.GetEnvironmentVariable("NFTTOKEN_ADDRESS");
-            _tokenContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable("NFTTOKEN_CREATIONBLOCK"));
+            _chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));
 
-            _crowdsaleContractAddress = Environment.GetEnvironmentVariable("NFTTOKENCROWDSALE_ADDRESS");
-            _crowdsaleContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable("NFTTOKENCROWDSALE_CREATIONBLOCK"));
+            _tokenContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKEN_ADDRESS");
+            _tokenContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKEN_CREATIONBLOCK"));
 
-            _swapContractAddress = Environment.GetEnvironmentVariable("NFTTOKENSWAP_ADDRESS");
-            _swapContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable("NFTTOKENSWAP_CREATIONBLOCK"));
+            _crowdsaleContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENCROWDSALE_ADDRESS");
+            _crowdsaleContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENCROWDSALE_CREATIONBLOCK"));
+
+            _swapContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENSWAP_ADDRESS");
+            _swapContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENSWAP_CREATIONBLOCK"));
 
             _httpClient = httpClientFactory.CreateClient("toyoBackend");
 
-            Console.WriteLine($"[SyncController] Connected to {_url}");
+            sync.AddHttpClient(_httpClient);
+
+            Console.WriteLine($"[SyncController] Connected to {_sync.Url}");
         }
 
         [HttpGet]
         [Route("SyncTransfers")]
         public string SyncTransfers(
-            ulong? fromBlockNumber, 
+            ulong? fromBlockNumber,
             ulong? toBlockNumber,
             bool verbose = false,
             ulong fetchByBlocks = 1000)
         {
             const string eventName = "Transfer";
 
-            var sync = new Sync<TransferEventDto>(_web3, _chainId, _httpClient);
-
-            return sync.SyncEvent(
+            return _sync.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -89,9 +89,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenPurchased";
 
-            var sync = new Sync<TokenPurchasedEventDto>(_web3, _chainId, _httpClient);
-
-            return sync.SyncEvent(
+            return _sync.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -110,9 +108,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenPurchased";
 
-            var sync = new Sync<TokenPurchasedEventDto>(_web3, _chainId, _httpClient);
-
-            return sync.SyncEvent(
+            return _sync.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -131,9 +127,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenTypeAdded";
 
-            var sync = new Sync<TokenTypeAddedEventDto>(_web3, _chainId, _httpClient);
-
-            return sync.SyncEvent(
+            return _sync.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -152,9 +146,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenSwapped";
 
-            var sync = new Sync<TokenSwappedEventDto>(_web3, _chainId, _httpClient);
-
-            return sync.SyncEvent(
+            return _sync.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,

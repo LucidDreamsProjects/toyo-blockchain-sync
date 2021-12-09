@@ -16,23 +16,31 @@ using Toyo.Blockchain.Domain;
 
 namespace Toyo.Blockchain.Api.Helpers
 {
-    public class Sync<TEventMessage> : ReentrancyGuard where TEventMessage : IEventDTO, new()
+    public class Sync<TEventMessage> : ReentrancyGuard, ISync where TEventMessage : IEventDTO, new()
     {
         private readonly Web3 _web3;
         private readonly int _chainId;
-        private readonly HttpClient _httpClient;
+        private HttpClient _httpClient;
         private readonly Type _tokenTransferEventType = typeof(TransferEventDto);
         private readonly Type _tokenPurchasedEventType = typeof(TokenPurchasedEventDto);
         private readonly Type _tokenTypeEventType = typeof(TokenTypeAddedEventDto);
         private readonly Type _tokenSwapEventType = typeof(TokenSwappedEventDto);
 
-        public Sync(
-            Web3 web3,
-            int chainId,
-            HttpClient httpClient)
+        public string Url
         {
-            _web3 = web3;
+            get;
+            internal set;
+        }
+
+        public Sync(string url, int chainId)
+        {
+            Url = url;
+            _web3 = new Web3(url);
             _chainId = chainId;
+        }
+
+        public void AddHttpClient(HttpClient httpClient)
+        {
             _httpClient = httpClient;
         }
 
@@ -272,7 +280,7 @@ namespace Toyo.Blockchain.Api.Helpers
         {
             var typeId = ((int)eventLog.Event.TypeId);
             var blockNumber = ulong.Parse(eventLog.Log.BlockNumber.ToString());
-            var contractAddress = Environment.GetEnvironmentVariable("NFTTOKENSTORAGE_ADDRESS");
+            var contractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENSTORAGE_ADDRESS");
             var response = TokenStorage.GetMetadata(_web3, blockNumber, typeId, contractAddress).Result;
             var metadata = response.Metadata;
             var typeName = Token.GetTokenTypeName(metadata);

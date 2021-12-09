@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Net.Http;
+using Toyo.Blockchain.Api.Helpers;
+using Toyo.Blockchain.Domain.Dtos;
 
 namespace Toyo.Blockchain.Api
 {
@@ -41,6 +43,12 @@ namespace Toyo.Blockchain.Api
                     UseDefaultCredentials = true
                 };
             });
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Trim().ToUpper();
+            var chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));
+            var url = Environment.GetEnvironmentVariable($"{chainId}_WEB3_RPC");
+
+            services.AddSingleton<ISync>(new Sync<TransferEventDto>(url, chainId));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
