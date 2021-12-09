@@ -39,7 +39,6 @@ namespace Toyo.Blockchain.Api
                 return new HttpClientHandler()
                 {
                     AllowAutoRedirect = false,
-                    ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; },
                     UseDefaultCredentials = true
                 };
             });
