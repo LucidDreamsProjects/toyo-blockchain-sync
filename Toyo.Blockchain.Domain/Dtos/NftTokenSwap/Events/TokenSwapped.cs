@@ -15,7 +15,10 @@ namespace Toyo.Blockchain.Domain.Dtos
         [Parameter("uint256", "toTypeId", 3, true)]
         public BigInteger ToTypeId { get; set; }
 
-        [Parameter("uint256", "newTokenId", 4, false)]
-        public BigInteger TokenId { get; set; }
+        [Parameter("uint256", "fromTokenId", 4, false)]
+        public BigInteger FromTokenId { get; set; }
+
+        [Parameter("uint256", "toTokenId", 5, false)]
+        public BigInteger ToTokenId { get; set; }
     }
 }
