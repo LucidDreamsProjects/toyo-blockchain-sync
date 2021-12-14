@@ -16,7 +16,7 @@ using Toyo.Blockchain.Domain;
 
 namespace Toyo.Blockchain.Api.Helpers
 {
-    public class Sync<TEventMessage> : ReentrancyGuard, ISync where TEventMessage : IEventDTO, new()
+    public class Sync<TEventMessage> : ReentrancyGuard, ISync<TEventMessage> where TEventMessage : IEventDTO, new()
     {
         private readonly Web3 _web3;
         private readonly int _chainId;
