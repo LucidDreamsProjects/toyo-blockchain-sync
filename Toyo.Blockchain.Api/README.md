@@ -8,29 +8,6 @@ You need to setup these variables in order to run the sync methods.
 
 If you are running locally, go to Properties/launchSettings.json and set each of the variables as following.
 
-### Mainnet
-
-Variables for Mainet network
-
-#### NFT TOKEN CROWDSALE CONTRACT
-
-NFTTOKENCROWDSALE_ADDRESS: 0x0fb872ba6a28d5195bbaac2d4649713a7bc5c450
-NFTTOKENCROWDSALE_CREATIONBLOCK: 20223539
-
-#### NFT TOKEN CONTRACT
-
-NFTTOKEN_ADDRESS: 0x07AE3987C679c0aFd2eC1ED2945278c37918816c
-NFTTOKEN_CREATIONBLOCK: 20223288
-
-#### NFT TOKEN STORAGE
-
-NFTTOKENSTORAGE_ADDRESS: 0x964eF621b70d0c0934cDA2B6894F24dF6E96982B
-
-#### NFT TOKEN SWAP
-
-NFTTOKENSWAP_ADDRESS: Not deployed,
-NFTTOKENSWAP_CREATIONBLOCK: No deployed,
-
 #### WEB3
 
 You need to provide the Infura token key.
@@ -55,7 +32,7 @@ Each sync method accepts "verbose" parameter as optional, it outputs the log to 
 This method is used to sync all transfers made in the smart contract since the last block read to the latest block minted.
 It listens to the event name: Transfer
 
-curl -X GET "http://localhost:4444/Sync/SyncTypes?verbose=true"
+curl -X GET "http://localhost:4444/Sync/SyncTransfers?verbose=true"
 
 ### SyncMints
 

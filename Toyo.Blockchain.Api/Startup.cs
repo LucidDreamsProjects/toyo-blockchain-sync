@@ -47,7 +47,10 @@ namespace Toyo.Blockchain.Api
             var chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));
             var url = Environment.GetEnvironmentVariable($"{chainId}_WEB3_RPC");
 
-            services.AddSingleton<ISync>(new Sync<TransferEventDto>(url, chainId));
+            services.AddSingleton<ISync<TransferEventDto>>(new Sync<TransferEventDto>(url, chainId));
+            services.AddSingleton<ISync<TokenPurchasedEventDto>>(new Sync<TokenPurchasedEventDto>(url, chainId));
+            services.AddSingleton<ISync<TokenTypeAddedEventDto>>(new Sync<TokenTypeAddedEventDto>(url, chainId));
+            services.AddSingleton<ISync<TokenSwappedEventDto>>(new Sync<TokenSwappedEventDto>(url, chainId));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
