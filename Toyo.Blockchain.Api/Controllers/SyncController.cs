@@ -34,13 +34,18 @@ namespace Toyo.Blockchain.Api.Controllers
 
         private readonly HttpClient _httpClient;
 
-        private ISync _sync;
+        private ISync<TransferEventDto> _syncTransfer;
+        private ISync<TokenPurchasedEventDto> _syncTokenPurchased;
+        private ISync<TokenTypeAddedEventDto> _syncTokenTypeAdded;
+        private ISync<TokenSwappedEventDto> _syncTokenSwapped;
 
-        public SyncController(IHttpClientFactory httpClientFactory, ISync sync)
+        public SyncController(IHttpClientFactory httpClientFactory,
+            ISync<TransferEventDto> syncTransfer,
+            ISync<TokenPurchasedEventDto> syncTokenPurchased,
+            ISync<TokenTypeAddedEventDto> syncTokenTypeAdded,
+            ISync<TokenSwappedEventDto> syncTokenSwapped)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Trim().ToUpper();
-
-            _sync = sync;
 
             _chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));
 
@@ -55,9 +60,17 @@ namespace Toyo.Blockchain.Api.Controllers
 
             _httpClient = httpClientFactory.CreateClient("toyoBackend");
 
-            sync.AddHttpClient(_httpClient);
+            _syncTransfer = syncTransfer;
+            _syncTokenPurchased = syncTokenPurchased;
+            _syncTokenTypeAdded = syncTokenTypeAdded;
+            _syncTokenSwapped = syncTokenSwapped;
 
-            Console.WriteLine($"[SyncController] Connected to {_sync.Url}");
+            _syncTransfer.AddHttpClient(_httpClient);
+            _syncTokenPurchased.AddHttpClient(_httpClient);
+            _syncTokenTypeAdded.AddHttpClient(_httpClient);
+            _syncTokenSwapped.AddHttpClient(_httpClient);
+
+            Console.WriteLine($"[SyncController] Connected to {_syncTransfer.Url}");
         }
 
         [HttpGet]
@@ -70,7 +83,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "Transfer";
 
-            return _sync.SyncEvent(
+            return _syncTransfer.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -89,7 +102,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenPurchased";
 
-            return _sync.SyncEvent(
+            return _syncTokenPurchased.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -108,7 +121,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenPurchased";
 
-            return _sync.SyncEvent(
+            return _syncTokenPurchased.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -127,7 +140,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenTypeAdded";
 
-            return _sync.SyncEvent(
+            return _syncTokenTypeAdded.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,
@@ -146,7 +159,7 @@ namespace Toyo.Blockchain.Api.Controllers
         {
             const string eventName = "TokenSwapped";
 
-            return _sync.SyncEvent(
+            return _syncTokenSwapped.SyncEvent(
                         fromBlockNumber,
                         toBlockNumber,
                         eventName,

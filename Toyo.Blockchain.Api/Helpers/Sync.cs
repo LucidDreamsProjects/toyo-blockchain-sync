@@ -16,7 +16,7 @@ using Toyo.Blockchain.Domain;
 
 namespace Toyo.Blockchain.Api.Helpers
 {
-    public class Sync<TEventMessage> : ReentrancyGuard, ISync where TEventMessage : IEventDTO, new()
+    public class Sync<TEventMessage> : ReentrancyGuard, ISync<TEventMessage> where TEventMessage : IEventDTO, new()
     {
         private readonly Web3 _web3;
         private readonly int _chainId;
@@ -311,7 +311,8 @@ namespace Toyo.Blockchain.Api.Helpers
                 transactionHash = eventLog.Log.TransactionHash,
                 fromTypeId = ((int)eventLog.Event.FromTypeId),
                 toTypeId = ((int)eventLog.Event.ToTypeId),
-                tokenId = ulong.Parse(eventLog.Event.TokenId.ToString()),
+                fromTokenId = ulong.Parse(eventLog.Event.FromTokenId.ToString()),
+                toTokenId = ulong.Parse(eventLog.Event.ToTokenId.ToString()),
                 blockNumber = ulong.Parse(eventLog.Log.BlockNumber.ToString()),
                 sender = eventLog.Event.Sender,
                 chainId = _chainId.ToString()
@@ -322,7 +323,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
             Post(requestUri, json);
 
-            Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TokenId}");
+            Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.ToTokenId}");
         }
     }
 }

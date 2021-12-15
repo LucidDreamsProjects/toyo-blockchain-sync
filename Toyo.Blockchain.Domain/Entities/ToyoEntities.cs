@@ -52,8 +52,6 @@ namespace Toyo.Blockchain.Domain
         public ulong blockNumber { get; set; }
 
         public string chainId { get; set; }
-
-        
     }
 
     public class ToyoSwap
@@ -64,7 +62,9 @@ namespace Toyo.Blockchain.Domain
 
         public int toTypeId { get; set; }
 
-        public ulong tokenId { get; set; }
+        public ulong toTokenId { get; set; }
+
+        public ulong fromTokenId { get; set; }
 
         public string sender { get; set; }
 
