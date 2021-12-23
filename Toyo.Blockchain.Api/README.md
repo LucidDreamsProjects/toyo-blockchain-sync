@@ -61,3 +61,10 @@ This method is used to sync all tokens minted during swap in the smart contract 
 It listens to the event name: TokenPurchased
 
 curl -X GET "http://localhost:4444/Sync/SyncSwapMints?verbose=true"
+
+
+### AirDrops
+
+Average cost by token sent, example:
+
+0.0005 GAS * 40 GAS FEE = 0.02 MATIC * 3167 TX = 63.34 MATIC

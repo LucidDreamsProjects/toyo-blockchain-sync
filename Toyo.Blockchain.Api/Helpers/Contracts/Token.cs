@@ -13,34 +13,46 @@ namespace Toyo.Blockchain.Api.Helpers.Contracts
 {
     public static class Token
     {
+        public static async Task<TotalSupplyOutputDto> GetTotalSupply(Web3 web3, ulong toBlock, string contractAddress)
+        {
+            var function = new TotalSupplyFunction();
+            var handler = web3.Eth.GetContractQueryHandler<TotalSupplyFunction>();
+            var output = await handler.
+                QueryDeserializingToObjectAsync<TotalSupplyOutputDto>(
+                    function,
+                    contractAddress,
+                    new BlockParameter(toBlock));
+            return output;
+        }
+
         public static async Task<OwnerOfOutputDto> GetTokenOwner(Web3 web3, ulong toBlock, BigInteger tokenId, string contractAddress)
         {
-            var ownerOfFunctionMessage = new OwnerOfFunction()
+            var function = new OwnerOfFunction()
             {
                 TokenId = tokenId
             };
-            var ownerOfHandler = web3.Eth.GetContractQueryHandler<OwnerOfFunction>();
-            var ownerOfOutput = await ownerOfHandler.
+            var handler = web3.Eth.GetContractQueryHandler<OwnerOfFunction>();
+            var output = await handler.
                 QueryDeserializingToObjectAsync<OwnerOfOutputDto>(
-                    ownerOfFunctionMessage,
+                    function,
                     contractAddress,
                     new BlockParameter(toBlock));
-            return ownerOfOutput;
+            return output;
         }
 
         public static async Task<TokenUriOutputDto> GetTokenUri(Web3 web3, ulong toBlock, BigInteger tokenId, string contractAddress)
         {
-            var tokenUriFunctionMessage = new TokenUriFunction()
+            var function = new TokenUriFunction()
             {
                 TokenId = tokenId
             };
-            var tokenUriHandler = web3.Eth.GetContractQueryHandler<TokenUriFunction>();
-            var tokenUriOutput = await tokenUriHandler.
+            var handler = web3.Eth.GetContractQueryHandler<TokenUriFunction>();
+            var output = await handler.
                 QueryDeserializingToObjectAsync<TokenUriOutputDto>(
-                    tokenUriFunctionMessage,
+                    function,
                     contractAddress,
                     new BlockParameter(toBlock));
-            return tokenUriOutput;
+            return output;
         }
 
         private const int HASH_START_INDEX = 7;

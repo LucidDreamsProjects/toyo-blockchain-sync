@@ -1,4 +1,5 @@
 {
+  "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -7,26 +8,7 @@
       "sslPort": 44345
     }
   },
-  "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
-    "lucid_dreams_service": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
-    },
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
@@ -34,31 +16,35 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
 
+        "TOYO_BACKEND_API": "https://x078ytklzx-game-api.toyoverse.com/api/",
+
         "WEB3_CHAINID_DEVELOPMENT": "80001",
         "WEB3_CHAINID_PRODUCTION": "137",
 
-        "TOYO_BACKEND_API": "https://x078ytklzx-game-api.toyoverse.com/api/",
+        "80001_NFTTOKENCROWDSALE_CREATIONBLOCK": "22662678",
+        "80001_WEB3_RPC": "https://polygon-mumbai.infura.io/v3/c2f4b736b84840c49cfef35c04820314",
+        "80001_GAS_PRICE_GWEI": "40",
+        "80001_NFTTOKENSTORAGE_ADDRESS": "0xa0f9D18a2a028266dfaF5E40ae476F49e7bcc8F6",
+        "80001_NFTTOKENSWAP_CREATIONBLOCK": "22662726",
+        "80001_NFTTOKEN_ADDRESS": "0xc02173691984D68625C455e0AB45f52581c008Da",
+        "80001_NFTTOKEN_CREATIONBLOCK": "22662658",
+        "80001_NFTTOKENCROWDSALE_ADDRESS": "0xD34D906d2f214Acac344Fbf0248d011796d6bfFA",
+        "80001_NFTTOKENSWAP_ADDRESS": "0xD6D5E8C1d02702809c47aaaf461A1F68Ab395804",
+        "80001_WEB3_PK": "PRIVATE_KEY",
 
-        "80001_WEB3_RPC": "https://polygon-mumbai.infura.io/v3/87b15114e63f437188218a02462394bb",
-        "80001_NFTTOKENCROWDSALE_ADDRESS": "0x3E3FF74c5cf6Fb2A254Ad3D76d6e800aE8814F11",
-        "80001_NFTTOKENCROWDSALE_CREATIONBLOCK": "20179333",
-        "80001_NFTTOKEN_ADDRESS": "0x209aA41E78F8ae8ca1f58441E49857CeD709008f",
-        "80001_NFTTOKEN_CREATIONBLOCK": "20179262",
-        "80001_NFTTOKENSWAP_ADDRESS": "0x7c6f90da26fc5986fD2d71Cb9e9f5Cc875D61575",
-        "80001_NFTTOKENSWAP_CREATIONBLOCK": "22150877",
-        "80001_NFTTOKENSTORAGE_ADDRESS": "0x964eF621b70d0c0934cDA2B6894F24dF6E96982B",
-
-        "137_WEB3_RPC": "https://polygon-mainnet.infura.io/v3/87b15114e63f437188218a02462394bb",
+        "137_WEB3_RPC": "https://polygon-mainnet.infura.io/v3/c2f4b736b84840c49cfef35c04820314",
+        "137_NFTTOKEN_CREATIONBLOCK": "20223288",
+        "137_NFTTOKENSTORAGE_ADDRESS": "0x458cAaDe191B874D6d378f19e42640A711Db90F0",
+        "137_NFTTOKENSWAP_CREATIONBLOCK": "22874974",
         "137_NFTTOKENCROWDSALE_ADDRESS": "0x0fb872ba6a28d5195bbaac2d4649713a7bc5c450",
+        "137_GAS_PRICE_GWEI": "40",
         "137_NFTTOKENCROWDSALE_CREATIONBLOCK": "20223539",
         "137_NFTTOKEN_ADDRESS": "0x07AE3987C679c0aFd2eC1ED2945278c37918816c",
-        "137_NFTTOKEN_CREATIONBLOCK": "20223288",
-        "137_NFTTOKENSWAP_ADDRESS": "0x7777777777777776fD2d71Cb9e9f5Cc875D61575",
-        "137_NFTTOKENSWAP_CREATIONBLOCK": "22222222",
-        "137_NFTTOKENSTORAGE_ADDRESS": "0x458cAaDe191B874D6d378f19e42640A711Db90F0"
+        "137_NFTTOKENSWAP_ADDRESS": "0xd2a22422AE56fa4cc54AD848769CFC8b9470B3Eb",
+        "137_WEB3_PK": "PRIVATE_KEY"
       },
       "publishAllPorts": true,
-      "useSSL": true
+      "useSSL": false
     }
   }
 }

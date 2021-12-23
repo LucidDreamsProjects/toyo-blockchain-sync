@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Nethereum.Web3.Accounts;
 using System;
 using System.Net.Http;
 using Toyo.Blockchain.Api.Helpers;
@@ -44,6 +45,7 @@ namespace Toyo.Blockchain.Api
             });
 
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Trim().ToUpper();
+
             var chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));
             var url = Environment.GetEnvironmentVariable($"{chainId}_WEB3_RPC");
 
@@ -51,12 +53,16 @@ namespace Toyo.Blockchain.Api
             services.AddSingleton<ISync<TokenPurchasedEventDto>>(new Sync<TokenPurchasedEventDto>(url, chainId));
             services.AddSingleton<ISync<TokenTypeAddedEventDto>>(new Sync<TokenTypeAddedEventDto>(url, chainId));
             services.AddSingleton<ISync<TokenSwappedEventDto>>(new Sync<TokenSwappedEventDto>(url, chainId));
+
+            var pk = Environment.GetEnvironmentVariable($"{chainId}_WEB3_PK");
+            var account = new Account(pk, chainId);
+            services.AddSingleton<IAirDrop>(new AirDrop(url, chainId, account));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsProduction())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
