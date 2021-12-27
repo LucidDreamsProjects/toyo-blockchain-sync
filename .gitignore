@@ -12,7 +12,5 @@ bin
 .vscode
 *.zip
 appsettings.test*
-AirDrop*
 README.*.md
 *.user
-*.txt
