@@ -30,9 +30,41 @@ Each sync method accepts "verbose" parameter as optional, it outputs the log to 
 ### SyncTransfers
 
 This method is used to sync all transfers made in the smart contract since the last block read to the latest block minted.
+This is a legacy method and  will be used until this collection is deprecated
 It listens to the event name: Transfer
 
+Internal example:
+
 curl -X GET "http://localhost:4444/Sync/SyncTransfers?verbose=true"
+
+External example:
+
+curl -X GET "https://dev-blockchain.nakatoshivault.com/Sync/SyncTransfers?verbose=true"
+
+Example using from and to block number parameters:
+
+curl -X GET "http://localhost:4444/Sync/SyncTransfers?verbose=true&fromBlockNumber=23280137&toBlockNumber=23281171"
+
+### SyncToyoTransfers
+
+This method is used to sync all transfers made in the toyo smart contract since the last block read to the latest block minted.
+It listens to the event name: Transfer
+
+curl -X GET "http://localhost:4444/Sync/SyncToyoTransfers?verbose=true"
+
+### SyncBoxTransfers
+
+This method is used to sync all transfers made in the box smart contract since the last block read to the latest block minted.
+It listens to the event name: Transfer
+
+curl -X GET "http://localhost:4444/Sync/SyncBoxTransfers?verbose=true"
+
+### SyncAirdropTransfers
+
+This method is used to sync all transfers made in the airdrop smart contract since the last block read to the latest block minted.
+It listens to the event name: Transfer
+
+curl -X GET "http://localhost:4444/Sync/SyncAirdropTransfers?verbose=true"
 
 ### SyncMints
 
