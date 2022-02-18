@@ -26,6 +26,15 @@ namespace Toyo.Blockchain.Api.Controllers
         private readonly string _tokenContractAddress;
         private readonly ulong _tokenContractCreationBlock;
 
+        private readonly string _tokenToyoContractAddress;
+        private readonly ulong _tokenToyoContractCreationBlock;
+
+        private readonly string _tokenBoxContractAddress;
+        private readonly ulong _tokenBoxContractCreationBlock;
+
+        private readonly string _tokenAirdropContractAddress;
+        private readonly ulong _tokenAirdropContractCreationBlock;
+
         private readonly string _crowdsaleContractAddress;
         private readonly ulong _crowdsaleContractCreationBlock;
 
@@ -51,6 +60,15 @@ namespace Toyo.Blockchain.Api.Controllers
 
             _tokenContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKEN_ADDRESS");
             _tokenContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKEN_CREATIONBLOCK"));
+
+            _tokenToyoContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENTOYO_ADDRESS");
+            _tokenToyoContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENTOYO_CREATIONBLOCK"));
+
+            _tokenBoxContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENBOX_ADDRESS");
+            _tokenBoxContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENBOX_CREATIONBLOCK"));
+
+            _tokenAirdropContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENAIRDROP_ADDRESS");
+            _tokenAirdropContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENAIRDROP_CREATIONBLOCK"));
 
             _crowdsaleContractAddress = Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENCROWDSALE_ADDRESS");
             _crowdsaleContractCreationBlock = ulong.Parse(Environment.GetEnvironmentVariable($"{_chainId}_NFTTOKENCROWDSALE_CREATIONBLOCK"));
@@ -89,6 +107,66 @@ namespace Toyo.Blockchain.Api.Controllers
                         eventName,
                         _tokenContractAddress,
                         _tokenContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
+        }
+
+        [HttpGet]
+        [Route("SyncToyoTransfers")]
+        public string SyncToyoTransfers(
+            ulong? fromBlockNumber,
+            ulong? toBlockNumber,
+            bool verbose = false,
+            ulong fetchByBlocks = 1000)
+        {
+            const string eventName = "Transfer";
+
+            return _syncTransfer.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _tokenToyoContractAddress,
+                        _tokenToyoContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
+        }
+
+        [HttpGet]
+        [Route("SyncBoxTransfers")]
+        public string SyncBoxTransfers(
+            ulong? fromBlockNumber,
+            ulong? toBlockNumber,
+            bool verbose = false,
+            ulong fetchByBlocks = 1000)
+        {
+            const string eventName = "Transfer";
+
+            return _syncTransfer.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _tokenBoxContractAddress,
+                        _tokenBoxContractCreationBlock,
+                        verbose,
+                        fetchByBlocks);
+        }
+
+        [HttpGet]
+        [Route("SyncAirdropTransfers")]
+        public string SyncAirdropTransfers(
+            ulong? fromBlockNumber,
+            ulong? toBlockNumber,
+            bool verbose = false,
+            ulong fetchByBlocks = 1000)
+        {
+            const string eventName = "Transfer";
+
+            return _syncTransfer.SyncEvent(
+                        fromBlockNumber,
+                        toBlockNumber,
+                        eventName,
+                        _tokenAirdropContractAddress,
+                        _tokenAirdropContractCreationBlock,
                         verbose,
                         fetchByBlocks);
         }
