@@ -30,7 +30,7 @@ namespace Toyo.Blockchain.Api
             });
             services.AddHttpClient("toyoBackend", c =>
             {
-                var toyoBackendApi = Environment.GetEnvironmentVariable("TOYO_BACKEND_API");
+                var toyoBackendApi = Configuration["TOYO_BACKEND_API"];
                 c.BaseAddress = new Uri(toyoBackendApi);
                 c.DefaultRequestHeaders.Add("Accept", "application/json");
                 c.DefaultRequestHeaders.Add("User-Agent", "Toyo.Blockchain.Api");
@@ -39,18 +39,16 @@ namespace Toyo.Blockchain.Api
                 return new HttpClientHandler()
                 {
                     AllowAutoRedirect = false,
-                    UseDefaultCredentials = true
+                    UseDefaultCredentials = true,
+                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => {return true;}
                 };
             });
-
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Trim().ToUpper();
-            var chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));
-            var url = Environment.GetEnvironmentVariable($"{chainId}_WEB3_RPC");
-
-            services.AddSingleton<ISync<TransferEventDto>>(new Sync<TransferEventDto>(url, chainId));
-            services.AddSingleton<ISync<TokenPurchasedEventDto>>(new Sync<TokenPurchasedEventDto>(url, chainId));
-            services.AddSingleton<ISync<TokenTypeAddedEventDto>>(new Sync<TokenTypeAddedEventDto>(url, chainId));
-            services.AddSingleton<ISync<TokenSwappedEventDto>>(new Sync<TokenSwappedEventDto>(url, chainId));
+            
+            services.AddSingleton<ILoginHelper, LoginHelper>();
+            services.AddSingleton<ISync<TransferEventDto>, Sync<TransferEventDto>>();
+            services.AddSingleton<ISync<TokenPurchasedEventDto>, Sync<TokenPurchasedEventDto>>();
+            services.AddSingleton<ISync<TokenTypeAddedEventDto>, Sync<TokenTypeAddedEventDto>>();
+            services.AddSingleton<ISync<TokenSwappedEventDto>, Sync<TokenSwappedEventDto>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

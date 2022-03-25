@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Toyo.Blockchain.Api</RootNamespace>
@@ -7,27 +6,22 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <SonarQubeTestProject>False</SonarQubeTestProject>
   </PropertyGroup>
-
   <ItemGroup>
-    <Compile Remove="Controllers\AirDropController.cs" />
+    <Compile Remove="Controllers\AirDropController.cs"/>
   </ItemGroup>
-
   <ItemGroup>
-    <Content Remove="appsettings.Development.json" />
+    <Content Remove="appsettings.Development.json"/>
   </ItemGroup>
-
   <ItemGroup>
-    <None Remove="README.develop.md" />
+    <None Remove="README.develop.md"/>
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.0"/>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Toyo.Blockchain.Domain\Toyo.Blockchain.Domain.csproj" />
+    <ProjectReference Include="..\Toyo.Blockchain.Domain\Toyo.Blockchain.Domain.csproj"/>
   </ItemGroup>
-
 </Project>

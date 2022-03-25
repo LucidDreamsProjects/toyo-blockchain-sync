@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Toyo.Blockchain.Domain.Dtos;
 using Toyo.Blockchain.Api.Helpers.Contracts;
 using Toyo.Blockchain.Domain;
+using System.Net.Http.Headers;
 
 namespace Toyo.Blockchain.Api.Helpers
 {
@@ -21,22 +22,21 @@ namespace Toyo.Blockchain.Api.Helpers
         private readonly Web3 _web3;
         private readonly int _chainId;
         private HttpClient _httpClient;
+        private readonly ILoginHelper _loginHelper;
         private readonly Type _tokenTransferEventType = typeof(TransferEventDto);
         private readonly Type _tokenPurchasedEventType = typeof(TokenPurchasedEventDto);
         private readonly Type _tokenTypeEventType = typeof(TokenTypeAddedEventDto);
         private readonly Type _tokenSwapEventType = typeof(TokenSwappedEventDto);
 
-        public string Url
-        {
-            get;
-            internal set;
-        }
+        public string Url{ get; internal set;}
 
-        public Sync(string url, int chainId)
+        public Sync(ILoginHelper loginHelper)
         {
-            Url = url;
-            _web3 = new Web3(url);
-            _chainId = chainId;
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Trim().ToUpper();
+            _chainId = int.Parse(Environment.GetEnvironmentVariable($"WEB3_CHAINID_{environment}"));;
+            Url = Environment.GetEnvironmentVariable($"{_chainId}_WEB3_RPC");
+            _web3 = new Web3(Url);
+            _loginHelper = loginHelper;
         }
 
         public void AddHttpClient(HttpClient httpClient)
@@ -179,7 +179,7 @@ namespace Toyo.Blockchain.Api.Helpers
             ulong lastBlockSynced;
 
             var requestUri = $"SmartContractToyoSync/getLastBlockNumber?chainId={_chainId}&contractAddress={contractAddress}&eventName={eventName}";
-            var response = _httpClient.GetAsync(requestUri).Result;
+            var response = GetResponseOffChain(requestUri);
 
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
@@ -195,6 +195,18 @@ namespace Toyo.Blockchain.Api.Helpers
             }
 
             return lastBlockSynced + 1;
+        }
+        private HttpResponseMessage GetResponseOffChain(string requestUri)
+        {
+            ValidateToken();
+            
+            return _httpClient.GetAsync(requestUri).Result;
+        }
+
+        private void ValidateToken()
+        {
+            if(_loginHelper.TokenIsValid(_httpClient)) return;
+            _loginHelper.GenerateToken(_httpClient);
         }
 
         private void SetLastBlockSynced(string eventName, ulong toIncrementBlock, string chainId, string contractAddress)
@@ -215,14 +227,15 @@ namespace Toyo.Blockchain.Api.Helpers
             const string requestUri = "SmartContractToyoSync";
             var json = JsonSerializer.Serialize(item);
 
-            Post(requestUri, json);
+            PostOffChainApi(requestUri, json);
         }
 
-        private void Post(string requestUri, string json)
+        private void PostOffChainApi(string requestUri, string json)
         {
+            ValidateToken();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = _httpClient.PostAsync(requestUri, content).Result;
+            
+            HttpResponseMessage response = _httpClient.PostAsync(requestUri, content).Result;
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK &&
                 response.StatusCode != System.Net.HttpStatusCode.Created &&
@@ -246,7 +259,7 @@ namespace Toyo.Blockchain.Api.Helpers
             const string requestUri = "SmartContractToyoTransfer";
             var json = JsonSerializer.Serialize(item);
 
-            Post(requestUri, json);
+            PostOffChainApi(requestUri, json);
 
             Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TokenId} | Hash {eventLog.Log.TransactionHash}");
         }
@@ -271,7 +284,7 @@ namespace Toyo.Blockchain.Api.Helpers
             const string requestUri = "SmartContractToyoMint";
             var json = JsonSerializer.Serialize(item);
 
-            Post(requestUri, json);
+            PostOffChainApi(requestUri, json);
 
             Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TokenId}");
         }
@@ -299,7 +312,7 @@ namespace Toyo.Blockchain.Api.Helpers
             const string requestUri = "SmartContractToyoType";
             var json = JsonSerializer.Serialize(item);
 
-            Post(requestUri, json);
+            PostOffChainApi(requestUri, json);
 
             Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.TypeId} | Name {typeName} | Metadata {metadata}");
         }
@@ -321,7 +334,7 @@ namespace Toyo.Blockchain.Api.Helpers
             const string requestUri = "SmartContractToyoSwap";
             var json = JsonSerializer.Serialize(item);
 
-            Post(requestUri, json);
+            PostOffChainApi(requestUri, json);
 
             Diagnostics.WriteLog(log, $"[{eventName}] Add {eventLog.Event.ToTokenId}");
         }
