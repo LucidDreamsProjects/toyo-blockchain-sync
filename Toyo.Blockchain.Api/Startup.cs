@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace Toyo.Blockchain.Api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public async void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -43,7 +44,7 @@ namespace Toyo.Blockchain.Api
                     ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => {return true;}
                 };
             });
-            
+            services.AddHealthChecks();
             services.AddSingleton<ILoginHelper, LoginHelper>();
             services.AddSingleton<ISync<TransferEventDto>, Sync<TransferEventDto>>();
             services.AddSingleton<ISync<TokenPurchasedEventDto>, Sync<TokenPurchasedEventDto>>();
@@ -60,7 +61,7 @@ namespace Toyo.Blockchain.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Toyo.Blockchain.Api v1"));
             }
-
+            app.UseHealthChecks("/api/health");
             app.UseHttpsRedirection();
 
             app.UseRouting();

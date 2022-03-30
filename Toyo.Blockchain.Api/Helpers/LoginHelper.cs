@@ -13,7 +13,7 @@ namespace Toyo.Blockchain.Api.Helpers
     public class LoginHelper : ILoginHelper
     {
         private const string REFRESH_TOKEN_HEADER = "refresh_token";
-        private const string AUTHENTICATION_RESOURCE_URI = "api/login/authorization";
+        private const string AUTHENTICATION_RESOURCE_URI = "login/authorization";
         private readonly string _login;
         private readonly string _password;
 
