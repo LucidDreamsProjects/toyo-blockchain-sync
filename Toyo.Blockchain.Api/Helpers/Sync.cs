@@ -67,11 +67,8 @@ namespace Toyo.Blockchain.Api.Helpers
                 lock (methodStopWatch)
                 {
                     methodStopWatch.Start();
-
                     var chainId = _chainId.ToString();
-
                     var eventHandler = _web3.Eth.GetEvent<TEventMessage>(contractAddress);
-
                     if (!fromBlockNumber.HasValue)
                     {
                         fromBlockNumber = GetLastBlockSynced(eventName, eventHandler.ContractAddress, creationBlock);
@@ -86,7 +83,6 @@ namespace Toyo.Blockchain.Api.Helpers
                     {
                         toBlockNumber = fromBlockNumber;
                     }
-
                     var totalIterations = CalculateIterations(fromBlockNumber, toBlockNumber, fetchByBlocks);
 
                     fromIncrementBlock = fromBlockNumber.Value;
@@ -158,6 +154,7 @@ namespace Toyo.Blockchain.Api.Helpers
 
         private static decimal CalculateIterations(ulong? fromBlockNumber, ulong? toBlockNumber, ulong fetchByBlocks)
         {
+            
             return Math.Ceiling((decimal)(toBlockNumber - fromBlockNumber) / fetchByBlocks);
         }
 

@@ -37,7 +37,7 @@
         "WEB3_CHAINID_DEVELOPMENT": "80001",
         "WEB3_CHAINID_PRODUCTION": "137",
 
-        "TOYO_BACKEND_API": "https://x078ytklzx-game-api.toyoverse.com/api/",
+        "TOYO_BACKEND_API": "https://localhost/api",
 
         "80001_WEB3_RPC": "https://polygon-mumbai.infura.io/v3/87b15114e63f437188218a02462394bb",
         "80001_NFTTOKENCROWDSALE_ADDRESS": "0x3E3FF74c5cf6Fb2A254Ad3D76d6e800aE8814F11",
