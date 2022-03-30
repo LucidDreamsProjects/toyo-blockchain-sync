@@ -5,6 +5,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
+RUN dotnet dev-certs https --trust
 COPY ["Toyo.Blockchain.Api/Toyo.Blockchain.Api.csproj", "Toyo.Blockchain.Api/"]
 COPY ["Toyo.Blockchain.Domain/Toyo.Blockchain.Domain.csproj", "Toyo.Blockchain.Domain/"]
 RUN dotnet restore "Toyo.Blockchain.Api/Toyo.Blockchain.Api.csproj"
