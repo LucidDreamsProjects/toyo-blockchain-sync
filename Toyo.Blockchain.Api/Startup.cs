@@ -62,7 +62,7 @@ namespace Toyo.Blockchain.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Toyo.Blockchain.Api v1"));
             }
             app.UseHealthChecks("/api/health");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
