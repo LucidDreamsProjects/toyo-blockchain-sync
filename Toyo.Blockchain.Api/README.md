@@ -22,11 +22,11 @@ WEB3_CHAINID: 137
 
 ### 2.1 dev environment
 
-> docker-compose --env-file "./d.env" up -d
+> docker-compose --env-file "./d.env" up --build --force-recreate -d
 
 ### 2.2 production environment
 
-> docker-compose --env-file "./p.env" up -d
+> docker-compose --env-file "./p.env" up --build --force-recreate -d
 
 ## 3) Sync methods
 
