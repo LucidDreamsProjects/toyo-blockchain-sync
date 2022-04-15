@@ -40,12 +40,5 @@ services:
       - 137_NFTTOKENSWAP_ADDRESS
       - 137_NFTTOKENSWAP_CREATIONBLOCK
     ports:
-      - "81:80"
-      - "444:443"
-    networks:
-      - toyo-net
-
-networks:
-  toyo-net:
-    external:
-      name: toyo-net
+      - "80:80"
+      - "443:443"
